@@ -2,19 +2,23 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
+import java.util.concurrent.Callable
 
-class SongExporter(id: Int) : TimedProcess {
-    override val id: String = id.toString()
+class SongExporter(id: Int, private val timeOutInSeconds: Long) : Callable<Any> {
+    val id: String = id.toString()
     private val directory = File(path)
 
     override fun call() {
+        println("Exporting $id")
         val process = ProcessBuilder("$directory\\MSD.exe", id, "-m", "--start=2000").directory(directory).start()
         val `is`: InputStream = process.inputStream
         val isr = InputStreamReader(`is`)
         val br = BufferedReader(isr)
-        var line: String?
+        var line: String? = ""
 
-        while (br.readLine().also { line = it } != null) {
+        val endTime = System.currentTimeMillis() + timeOutInSeconds * 1000
+
+        while (System.currentTimeMillis() < endTime && br.readLine().also { line = it } != null) {
             if (detailedDebug) {
                 println(line)
             }
