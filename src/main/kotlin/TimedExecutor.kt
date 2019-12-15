@@ -1,14 +1,13 @@
 import java.util.concurrent.*
 
 
-class TimedExecutor(private val tasks: List<TimedProcess>, private val timeOut: Long) {
+class TimedExecutor(private val tasks: List<TimedProcess>, private val timeoutInSeconds: Long) {
     private val executor = Executors.newCachedThreadPool()
 
     fun execute() {
         val ids = tasks.map { it.id }
         try {
-            val futures = executor.invokeAll(tasks)
-            val results = futures.map { it[timeOut, TimeUnit.MILLISECONDS] }
+            val futures = executor.invokeAll(tasks, timeoutInSeconds, TimeUnit.SECONDS)
             println("Exported $ids")
         } catch (ex: TimeoutException) {
             println("Stopping $ids")
