@@ -16,7 +16,7 @@ class SongExporter(id: Int) : TimedProcess {
         var line: String?
 
         while (br.readLine().also { line = it } != null) {
-            println(line)
+//            println(line)
         }
     }
 
