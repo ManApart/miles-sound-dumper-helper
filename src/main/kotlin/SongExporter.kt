@@ -5,7 +5,6 @@ import java.io.InputStreamReader
 
 class SongExporter(id: Int) : TimedProcess {
     override val id: String = id.toString()
-    private val path = "R:\\Games\\Default\\Apex"
     private val directory = File(path)
 
     override fun call() {
