@@ -2,14 +2,14 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
-import java.util.concurrent.Callable
 
-class SongExporter(override val id: String) : TimedProcess {
+class SongExporter(id: Int) : TimedProcess {
+    override val id: String = id.toString()
     private val path = "R:\\Games\\Default\\Apex"
     private val directory = File(path)
 
     override fun call() {
-        val process = ProcessBuilder("$directory\\MSD.exe", id).directory(directory).start()
+        val process = ProcessBuilder("$directory\\MSD.exe", id, "-m", "--start=2000").directory(directory).start()
         val `is`: InputStream = process.inputStream
         val isr = InputStreamReader(`is`)
         val br = BufferedReader(isr)

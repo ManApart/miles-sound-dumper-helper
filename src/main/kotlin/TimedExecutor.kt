@@ -1,22 +1,24 @@
 import java.util.concurrent.*
 
 
-class TimedExecutor(private val task: TimedProcess, private val timeOut: Long) {
-    private val executor = Executors.newSingleThreadScheduledExecutor()
+class TimedExecutor(private val tasks: List<TimedProcess>, private val timeOut: Long) {
+    private val executor = Executors.newCachedThreadPool()
 
     fun execute() {
-        val future: Future<Any> = executor.submit(task)
+        val ids = tasks.map { it.id }
         try {
-            val result = future[timeOut, TimeUnit.MILLISECONDS]
-            println("Exported ${task.id}")
+            val futures = executor.invokeAll(tasks)
+            val results = futures.map { it[timeOut, TimeUnit.MILLISECONDS] }
+            println("Exported $ids")
         } catch (ex: TimeoutException) {
-            println("Stopping ${task.id}")
+            println("Stopping $ids")
         } catch (e: InterruptedException) {
-            println("${task.id} Interrupted $e")
+            println("$ids Interrupted $e")
         } catch (e: ExecutionException) {
-            println("${task.id} experienced an execution exception $e")
+            println("$ids experienced an execution exception $e")
         } finally {
             executor.shutdown()
         }
     }
+
 }
