@@ -1,8 +1,10 @@
+import kotlinx.coroutines.delay
+
 class SongExporterPlacebo(id: Int, private val timeOutInSeconds: Long) : SongExporter {
     override val id: String = id.toString()
-    override fun call() {
+    override suspend fun export() {
         println("Doing nothing for $id")
-        Thread.sleep(3000)
+        delay(3000)
     }
 
 }

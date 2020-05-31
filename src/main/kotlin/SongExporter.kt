@@ -1,5 +1,4 @@
-import java.util.concurrent.Callable
-
-interface SongExporter : Callable<Any>{
+interface SongExporter {
     val id: String
+    suspend fun export()
 }

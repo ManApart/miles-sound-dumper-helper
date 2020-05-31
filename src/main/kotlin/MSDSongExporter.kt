@@ -7,8 +7,7 @@ class MSDSongExporter(id: Int, private val timeOutInSeconds: Long) : SongExporte
     override val id: String = id.toString()
     private val directory = File(path)
 
-    override fun call() {
-        println("Exporting $id")
+    override suspend fun export() {
         val process = ProcessBuilder("$directory\\MSD.exe", id, "-m", "--start=2000").directory(directory).start()
         val `is`: InputStream = process.inputStream
         val isr = InputStreamReader(`is`)
